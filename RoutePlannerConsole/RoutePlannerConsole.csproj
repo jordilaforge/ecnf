@@ -7,7 +7,7 @@
     <ProjectGuid>{3D2B77FB-8F79-4E09-B96C-AD337A7FE936}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>RoutePlannerConsole</RootNamespace>
+    <RootNamespace>Fhnw.Ecnf.RoutePlanner.RoutePlannerConsole</RootNamespace>
     <AssemblyName>RoutePlannerConsole</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -41,11 +41,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Program.cs" />
+    <Compile Include="RoutePlannerConsoleApp.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\RoutePlannerLib\RoutePlannerLib.csproj">
+      <Project>{0526ace7-1021-460a-b15c-49c2bde6adfd}</Project>
+      <Name>RoutePlannerLib</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
