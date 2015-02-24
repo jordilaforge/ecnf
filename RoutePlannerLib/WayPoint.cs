@@ -17,5 +17,23 @@ namespace Fhnw.Ecnf.RoutePlanner.RoutePlannerLib
             Latitude = _latitude;
             Longitude = _longitude;
         }
+
+        public override String ToString()
+        {
+            if (this.Name != null || !(this.Name.Equals("")))
+            {
+                return "Waypoint: " + this.Name + " " + Math.Round(this.Latitude, 2) + "/" + Math.Round(this.Longitude, 2);
+            }
+            else
+            {
+                return "Waypoint: " + Math.Round(this.Latitude, 2) + "/" + Math.Round(this.Longitude, 2);
+            }
+        }
+
+        public double Distance(WayPoint target)
+        {
+            int radius = 6371;
+            return radius * Math.Acos(Math.Sin(this.Latitude)*Math.Sin(target.Latitude)+Math.Cos(this.Latitude)*Math.Cos(target.Latitude)*Math.Cos(this.Longitude-target.Longitude));
+        }
     }
 }
