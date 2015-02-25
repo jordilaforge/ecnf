@@ -21,6 +21,7 @@ namespace Fhnw.Ecnf.RoutePlanner.RoutePlannerLib
 
         public int ReadCities(string filename)
         {
+            int counter = 0;
             cities = new List<City>();
             try
             {
@@ -31,7 +32,7 @@ namespace Fhnw.Ecnf.RoutePlanner.RoutePlannerLib
                         String line = sr.ReadLine();
                         string[] splits = line.Split('\t');
                         cities.Add(new City(splits[0], splits[1], Convert.ToInt32(splits[2]), Convert.ToDouble(splits[3]), Convert.ToDouble(splits[4])));
-                        ++Count;
+                        ++counter;
                     }
 
                 }
@@ -41,7 +42,8 @@ namespace Fhnw.Ecnf.RoutePlanner.RoutePlannerLib
                 Console.WriteLine("The file could not be read:");
                 Console.WriteLine(e.Message);
             }
-            return Count;
+            Count += counter;
+            return counter;
         }
 
         public City this[int index] //indexer implementation
