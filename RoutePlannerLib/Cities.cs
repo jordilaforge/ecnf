@@ -69,9 +69,27 @@ namespace Fhnw.Ecnf.RoutePlanner.RoutePlannerLib
                     neighbours.Add(cities[i]);
                 }
             }
-            
+            return SortByDistance(neighbours,location);
+        }
 
-            return neighbours;
+
+        //Implemented own InsertionSort algorithm for Sorting List
+        public List<City> SortByDistance(List<City> neighbours,WayPoint location)
+        {
+            List<City> neighboursSorted = neighbours;
+            for (int i = 0; i < neighboursSorted.Count - 1; i++)
+            {
+                for (int j = i + 1; j > 0; j--)
+                {
+                    if (neighboursSorted[j - 1].Location.Distance(location) > neighboursSorted[j].Location.Distance(location))
+                    {
+                        var temp = neighboursSorted[j - 1];
+                        neighboursSorted[j - 1] = neighboursSorted[j];
+                        neighboursSorted[j] = temp;
+                    }
+                }
+            }
+            return neighboursSorted;
         }
     }
 }
