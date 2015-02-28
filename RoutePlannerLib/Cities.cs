@@ -91,5 +91,17 @@ namespace Fhnw.Ecnf.RoutePlanner.RoutePlannerLib
             }
             return neighboursSorted;
         }
+
+        public City FindCity(string cityName)
+        {
+            var city = cities.Find(delegate(City c)
+            {
+                if (String.Compare(c.Name,cityName,true)==0)
+                    return true;
+                else
+                    return false;
+            });
+            return city;
+        }
     }
 }
