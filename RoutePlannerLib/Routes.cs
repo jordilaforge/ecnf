@@ -16,6 +16,11 @@ namespace Fhnw.Ecnf.RoutePlanner.RoutePlannerLib
         List<Link> routes = new List<Link>();
         Cities cities;
 
+        //Delegate For EventRouteRequest
+        public delegate void RouteRequestHandler(object sender, RouteRequestEventArgs e);
+
+        public event RouteRequestHandler RouteRequestEvent;
+
         public int Count
         {
             get { return routes.Count; }
@@ -64,8 +69,27 @@ namespace Fhnw.Ecnf.RoutePlanner.RoutePlannerLib
         public List<Link> FindShortestRouteBetween(string fromCity, string toCity,
                                         TransportModes mode)
         {
+            OnRaiseRouteRequestEvent(new RouteRequestEventArgs(fromCity,toCity,mode));
             return null;
             //TODO
+        }
+
+        private void OnRaiseRouteRequestEvent(RouteRequestEventArgs routeRequestEventArgs)
+        {
+            // Make a temporary copy of the event to avoid possibility of
+            // a race condition if the last subscriber unsubscribes
+            // immediately after the null check and before the event is raised.
+            RouteRequestHandler handler = RouteRequestEvent;
+
+            // Event will be null if there are no subscribers
+            if (handler != null)
+            {
+                // Format the string to send inside the CustomEventArgs parameter
+                //routeRequestEventArgs.FromCity += String.Format("bla");
+                //routeRequestEventArgs.ToCity += String.Format("Zürich");
+                // Use the () operator to raise the event.
+                handler(this, routeRequestEventArgs);
+            }
         }
 
     }
