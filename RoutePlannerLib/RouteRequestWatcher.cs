@@ -8,28 +8,34 @@ namespace Fhnw.Ecnf.RoutePlanner.RoutePlannerLib
 {
     public class RouteRequestWatcher
        {
-        private string id;
-        public RouteRequestWatcher(string ID, Routes pub)
-        {
-            id = ID;
-            // Subscribe to the event using C# 2.0 syntax
-            pub.RouteRequestEvent += LogRouteRequest;
-        }
-
+        Dictionary<string, int> CityRequests;
         public RouteRequestWatcher()
         {
-            
+            CityRequests = new Dictionary<string,int>();
         }
+
 
         // Define what actions to take when the event is raised.
         public void LogRouteRequest(object sender, RouteRequestEventArgs e)
         {
-            Console.WriteLine(id + " received this message: {0}", e.FromCity);
+            if (!(CityRequests.ContainsKey(e.ToCity)))
+            {
+                CityRequests.Add(e.ToCity, 1);
+            }
+            else
+            {
+                int number;
+                CityRequests.TryGetValue(e.ToCity, out number);
+                number++;
+                CityRequests[e.ToCity] = number;
+            }
         }
 
-        public object GetCityRequests(string p)
+        public int GetCityRequests(string city)
         {
-            throw new NotImplementedException();
+            int number;
+            CityRequests.TryGetValue(city, out number);
+            return number;
         }
 
 
