@@ -77,18 +77,26 @@ namespace Fhnw.Ecnf.RoutePlanner.RoutePlannerLib
         public List<City> SortByDistance(List<City> neighbours,WayPoint location)
         {
             List<City> neighboursSorted = neighbours;
-            for (int i = 0; i < neighboursSorted.Count - 1; i++)
+            neighboursSorted.Sort(delegate(City a, City b)
             {
-                for (int j = i + 1; j > 0; j--)
-                {
-                    if (neighboursSorted[j - 1].Location.Distance(location) > neighboursSorted[j].Location.Distance(location))
-                    {
-                        var temp = neighboursSorted[j - 1];
-                        neighboursSorted[j - 1] = neighboursSorted[j];
-                        neighboursSorted[j] = temp;
-                    }
-                }
+                return (a.Location.Distance(location).CompareTo(b.Location.Distance(location)));
+
             }
+            );
+
+            //Self implemented Insertion Sort
+            //for (int i = 0; i < neighboursSorted.Count - 1; i++)
+            //{
+            //    for (int j = i + 1; j > 0; j--)
+            //    {
+            //        if (neighboursSorted[j - 1].Location.Distance(location) > neighboursSorted[j].Location.Distance(location))
+            //        {
+            //            var temp = neighboursSorted[j - 1];
+            //            neighboursSorted[j - 1] = neighboursSorted[j];
+            //            neighboursSorted[j] = temp;
+            //        }
+            //    }
+            //}
             return neighboursSorted;
         }
 
