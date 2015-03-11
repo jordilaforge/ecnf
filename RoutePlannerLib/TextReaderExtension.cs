@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Fhnw.Ecnf.RoutePlanner.RoutePlannerLib.Util
 {
-    class TextReaderExtension
+    static class TextReaderExtension
     {
         public static IEnumerable<string> GetSplitteLines(this string text, char ch)
         {
