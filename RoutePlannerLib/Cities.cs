@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Fhnw.Ecnf.RoutePlanner.RoutePlannerLib.Util;
 
 namespace Fhnw.Ecnf.RoutePlanner.RoutePlannerLib
 {
@@ -25,16 +26,17 @@ namespace Fhnw.Ecnf.RoutePlanner.RoutePlannerLib
             cities = new List<City>();
             try
             {
-                using (StreamReader sr = new StreamReader(filename))
+                using (TextReader reader = new StreamReader(filename))
                 {
-                    while (sr.Peek() >= 0)
+                    IEnumerable<string[]> citiesAsStrings = reader.GetSplittedLines('\t');
+
+                    foreach(string[] cs in citiesAsStrings)
                     {
-                        String line = sr.ReadLine();
-                        string[] splits = line.Split('\t');
-                        cities.Add(new City(splits[0], splits[1], Convert.ToInt32(splits[2]), Convert.ToDouble(splits[3]), Convert.ToDouble(splits[4])));
+                        cities.Add(new City(cs[0].Trim(),
+                            cs[1].Trim(), int.Parse(cs[2]),
+                            double.Parse(cs[3]), double.Parse(cs[4])));
                         ++counter;
                     }
-
                 }
             }
             catch (Exception e)

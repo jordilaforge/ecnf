@@ -4,6 +4,7 @@ using System.IO;
 using System.Collections.Generic;
 using System.Threading;
 using System.Linq;
+using Fhnw.Ecnf.RoutePlanner.RoutePlannerLib.Util;
 using Fhnw.Ecnf.RoutePlanner.RoutePlannerLib;
 
 
@@ -46,14 +47,12 @@ namespace Fhnw.Ecnf.RoutePlanner.RoutePlannerLib
         {
             using (TextReader reader = new StreamReader(filename))
             {
-                string line;
-                while ((line = reader.ReadLine()) != null)
+                IEnumerable<string[]> routesAsStrings = reader.GetSplittedLines('\t');
+
+                foreach (string[] route in routesAsStrings)
                 {
-                    var linkAsString = line.Split('\t');
-
-                    City city1 = cities.FindCity(linkAsString[0]);
-                    City city2 = cities.FindCity(linkAsString[1]);
-
+                    City city1 = cities.FindCity(route[0].Trim());
+                    City city2 = cities.FindCity(route[1].Trim());
                     // only add links, where the cities are found 
                     if ((city1 != null) && (city2 != null))
                     {
@@ -61,8 +60,8 @@ namespace Fhnw.Ecnf.RoutePlanner.RoutePlannerLib
                                                    TransportModes.Rail));
                     }
                 }
+                
             }
-
             return Count;
 
         }
@@ -121,7 +120,7 @@ namespace Fhnw.Ecnf.RoutePlanner.RoutePlannerLib
             {
                 City city1 = citiesOnRoute[i];
                 City city2 = citiesOnRoute[i + 1];
-                links.Add(new Link(city1, city2, city1.Location.Distance(city2.Location),mode));
+                links.Add(FindLink(city1, city2,mode));
             }
                 return links;
         }
@@ -190,13 +189,25 @@ namespace Fhnw.Ecnf.RoutePlanner.RoutePlannerLib
             return previous;
         }
 
-        private Link FindLink(City u, City n, TransportModes mode)
+        /// <summary>
+        /// Finds the link between two cities.
+        /// </summary>
+        /// <param name="c1">first city</param>
+        /// <param name="c2">second city</param>
+        /// <param name="t"></param>
+        /// <returns>found link or null</returns>
+        protected Link FindLink(City c1, City c2, TransportModes t)
         {
-            return routes.Find(delegate(Link link)
+            foreach (Link l in routes)
             {
-
-                return (link.TransportMode==mode)&&(link.FromCity==u)&&(link.ToCity==n);
-            });
+                if (t.Equals(l.TransportMode) &&
+                ((c1.Equals(l.FromCity) && c2.Equals(l.ToCity))
+                || (c2.Equals(l.FromCity) && c1.Equals(l.ToCity))))
+                {
+                    return new Link(c1, c2, l.Distance, TransportModes.Rail);
+                }
+            }
+            return null;
         }
 
 
