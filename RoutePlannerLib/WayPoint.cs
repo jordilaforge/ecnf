@@ -22,12 +22,12 @@ namespace Fhnw.Ecnf.RoutePlanner.RoutePlannerLib
         {
             if (this.Name == null || this.Name.Equals(""))
             {
-                return "WayPoint: " + Math.Round(this.Latitude, 2) + "/" + Math.Round(this.Longitude, 2);
+                return "WayPoint: " + String.Format("{0:0.00}", this.Latitude) + "/" + String.Format("{0:0.00}", this.Longitude);
                 
             }
             else
             {
-                return "WayPoint: " + this.Name + " " + Math.Round(this.Latitude, 2) + "/" + Math.Round(this.Longitude, 2);
+                return "WayPoint: " + this.Name + " " + String.Format("{0:0.00}", this.Latitude) + "/" + String.Format("{0:0.00}", this.Longitude);
             }
         }
 

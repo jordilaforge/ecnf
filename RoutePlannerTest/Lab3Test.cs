@@ -107,7 +107,7 @@ namespace Fhnw.Ecnf.RoutePlanner.RoutePlannerTest
 
             var routes = new Routes(cities);
 
-            routes.RouteRequestEvent += reqWatch.LogRouteRequest;
+            routes.RouteRequestEvent += reqWatch.LogRouteRequests;
             routes.FindShortestRouteBetween("Bern", "Zürich", TransportModes.Rail);
             routes.FindShortestRouteBetween("Bern", "Zürich", TransportModes.Rail);
             routes.FindShortestRouteBetween("Basel", "Bern", TransportModes.Rail);

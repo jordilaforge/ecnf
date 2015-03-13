@@ -16,11 +16,11 @@ namespace Fhnw.Ecnf.RoutePlanner.RoutePlannerLib
 
 
         // Define what actions to take when the event is raised.
-        public void LogRouteRequest(object sender, RouteRequestEventArgs e)
+        public void LogRouteRequests(object sender, RouteRequestEventArgs e)
         {
             if (!(CityRequests.ContainsKey(e.ToCity)))
             {
-                CityRequests.Add(e.ToCity, 1);
+                CityRequests[e.ToCity] = 1;
             }
             else
             {

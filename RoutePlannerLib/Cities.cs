@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Fhnw.Ecnf.RoutePlanner.RoutePlannerLib.Util;
+using System.Globalization;
 
 namespace Fhnw.Ecnf.RoutePlanner.RoutePlannerLib
 {
@@ -22,7 +23,6 @@ namespace Fhnw.Ecnf.RoutePlanner.RoutePlannerLib
 
         public int ReadCities(string filename)
         {
-            int counter = 0;
             cities = new List<City>();
             try
             {
@@ -34,18 +34,16 @@ namespace Fhnw.Ecnf.RoutePlanner.RoutePlannerLib
                     {
                         cities.Add(new City(cs[0].Trim(),
                             cs[1].Trim(), int.Parse(cs[2]),
-                            double.Parse(cs[3]), double.Parse(cs[4])));
-                        ++counter;
+                            double.Parse(cs[3], CultureInfo.InvariantCulture), double.Parse(cs[4], CultureInfo.InvariantCulture)));
                     }
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                Console.WriteLine("The file could not be read:");
-                Console.WriteLine(e.Message);
+                throw;
             }
-            Count += counter;
-            return counter;
+            Count += cities.Count;
+            return cities.Count;
         }
 
         public City this[int index] //indexer implementation
@@ -75,8 +73,7 @@ namespace Fhnw.Ecnf.RoutePlanner.RoutePlannerLib
         }
 
 
-        //Implemented own InsertionSort algorithm for Sorting List
-        public List<City> SortByDistance(List<City> neighbours,WayPoint location)
+        private List<City> SortByDistance(List<City> neighbours,WayPoint location)
         {
             List<City> neighboursSorted = neighbours;
             neighboursSorted.Sort(delegate(City a, City b)
@@ -92,10 +89,7 @@ namespace Fhnw.Ecnf.RoutePlanner.RoutePlannerLib
         {
             var city = cities.Find(delegate(City c)
             {
-                if (String.Compare(c.Name,cityName,true)==0)
-                    return true;
-                else
-                    return false;
+                return String.Compare(c.Name, cityName, true) == 0;
             });
             return city;
         }
