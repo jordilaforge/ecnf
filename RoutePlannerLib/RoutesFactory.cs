@@ -12,19 +12,30 @@ namespace Fhnw.Ecnf.RoutePlanner.RoutePlannerLib
     {
         static public IRoutes Create(Cities cities)
         {
-            string s = ConfigurationManager.AppSettings.Get("countoffiles");
-            string configvalue1 = ConfigurationManager.AppSettings["a"];
-            string configvalue2 = ConfigurationManager.AppSettings["b"];
-            if (configvalue1 == null)
-            {
-                Console.WriteLine("is null asdasd");
-            }
-            Console.WriteLine("GefundenerRouteAlgo: "+configvalue1);
-            return null;
+
+            return Create(cities,Properties.Settings1.Default.RouteAlgorithm);
         }
+
         static public IRoutes Create(Cities cities, string algorithmClassName)
         {
-            return null;
+            Assembly a = Assembly.GetExecutingAssembly();
+            Type t=null;
+            foreach (var at in a.GetTypes())
+            {
+                if (at.FullName.Equals(algorithmClassName))
+                {
+                    t = at;
+                }
+            }
+            if (t == null || !(t.IsClass))
+            {
+                return null;
+            }
+            else
+            {
+                return Activator.CreateInstance(t, cities) as IRoutes;
+            }
+            
         }
     }
 }

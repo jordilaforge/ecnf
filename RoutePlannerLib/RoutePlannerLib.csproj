@@ -43,7 +43,13 @@
     <Compile Include="City.cs" />
     <Compile Include="Cities.cs" />
     <Compile Include="IRoutes.cs" />
+    <Compile Include="RoutesDijkstra.cs" />
     <Compile Include="RoutesFactory.cs" />
+    <Compile Include="Properties\Settings1.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings1.settings</DependentUpon>
+    </Compile>
     <Compile Include="Util\TextReaderExtension.cs" />
     <Compile Include="RouteRequestWatcher.cs" />
     <Compile Include="Link.cs" />
@@ -54,6 +60,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="Properties\Settings1.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings1.Designer.cs</LastGenOutput>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
