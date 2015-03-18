@@ -18,19 +18,31 @@ namespace Fhnw.Ecnf.RoutePlanner.RoutePlannerLib.Util
 
 
 
-        public void Next(City c)
+        public void Next(object o)
         {
 
-            stream.WriteLine("Instance of "+c.GetType().FullName);
-            stream.WriteLine("Name=" +"\"" +c.Name+"\"");
-            stream.WriteLine("Country=" + "\"" + c.Country + "\"");
-            stream.WriteLine("Population=" + c.Population);
-            stream.WriteLine("Location is a nested object...");
-            stream.WriteLine("Instance of " + c.Location.GetType().FullName);
-            stream.WriteLine("Name=" + "\"" + c.Location.Name + "\"");
-            stream.WriteLine("Longitude=" + c.Location.Longitude);
-            stream.WriteLine("Latitude=" + c.Location.Latitude);
-            stream.WriteLine("End of instance");
+            stream.WriteLine("Instance of "+o.GetType().FullName);
+
+            foreach (var prop in o.GetType().GetProperties())
+            {
+                if (prop.PropertyType == typeof(string))
+                {
+                    stream.WriteLine(prop.Name+"=\""+prop.GetValue(o,null)+"\"");
+                }
+                else if (prop.PropertyType == typeof(int))
+                {
+                    stream.WriteLine(prop.Name +"="+ prop.GetValue(o,null));
+                }
+                else if (prop.PropertyType == typeof(double))
+                {
+                    stream.WriteLine(prop.Name + "=" + prop.GetValue(o,null));
+                }
+                else
+                {
+                    stream.WriteLine("Location is a nested object...");
+                    Next(prop.GetValue(o, null));
+                }
+            }
             stream.WriteLine("End of instance");
             Console.WriteLine(stream);
         }
