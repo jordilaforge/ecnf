@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -17,60 +18,154 @@ namespace Fhnw.Ecnf.RoutePlanner.RoutePlannerLib.Util
             this.stream = stream;
         }
 
-        public object Next()
+        public Object Next()
         {
-            object o =null;
-            String line;
+            int state = 0;
+            Object retVal = null;
+            string noName = String.Empty;
+            Object no = null;
+            string line;
             while ((line = stream.ReadLine()) != null)
             {
-                if (line.Contains("Instance of"))
+                switch (state)
                 {
-                    line = line.Remove(0, "Instance of ".Length);
-                    Assembly ass = Assembly.Load("RoutePlannerLib");
-                    o = ass.CreateInstance(line);
-                }
-                else if (line.Contains("=\""))
-                {
-                    Regex regex = new Regex("\"(.*)\"");
-                    var v = regex.Match(line);
-                    String cName = (v.Groups[1].ToString());
-                    var t = o.GetType();
-                    var prop = t.GetProperty("Name");
-                    prop.SetValue(o, cName);
-                }
-                else if (line.Contains("=")&&!(line.Contains("\""))&&!(line.Contains(".")))
-                {
-                    int integer = Convert.ToInt32(line.Substring(line.LastIndexOf('=') + 1));
-                    var t = o.GetType();
-                    var prop = t.GetProperty("Population");
-                    prop.SetValue(o, integer);
+                    case 0:
+                        if (line.Contains("Instance of "))
+                        {
+                            line = line.Remove(0, "Instance of ".Length);
+                            retVal = CreatObject(line);
+                            state = 1;
+                        }
+                        break;
+
+                    case 1:
+
+                        if (line.Contains("is a nested object..."))
+                        {
+                            noName = line.Substring(0, line.IndexOf(" "));
+                            state = 2;
+                        }
+                        else if (line.Contains("End of instance"))
+                        {
+                            state = 0;
+                            return retVal;
+                        }
+                        else
+                        {
+                            //Create to level member
+                            Type t = retVal.GetType();
+
+                            var index = line.IndexOf('=');
+                            var name = line.Substring(0, index);
+
+                            var pi = t.GetProperty(name);
+
+                            if (null != pi)
+                            {
+                                if (pi.PropertyType.Name == "String")
+                                {
+                                    var value = line.Substring(index + 2, line.Length - index - 3);
+                                    pi.SetValue(retVal, value);
+                                }
+                                else if (pi.PropertyType.Name == "Int32")
+                                {
+                                    var value = line.Substring(index + 1, line.Length - index - 1);
+                                    pi.SetValue(retVal, Int32.Parse(value));
+                                }
+                                else if (pi.PropertyType.Name == "Double")
+                                {
+                                    var value = line.Substring(index + 1, line.Length - index - 1);
+                                    pi.SetValue(retVal, Double.Parse(value, CultureInfo.InvariantCulture));
+                                }
+
+                            }
+                        }
+
+                        break;
+
+                    case 2:
+                        //Add nested Object
+                        if (line.Contains("Instance of "))
+                        {
+                            line = line.Remove(0, "Instance of ".Length);
+                            no = CreatObject(line);
+
+                            if (null != no)
+                            {
+                                Type t = retVal.GetType();
+                                var pi = t.GetProperty(noName);
+                                if (null != pi)
+                                {
+                                    pi.SetValue(retVal, no);
+                                    state = 3;
+                                }
+
+                            }
+                        }
+
+                        break;
+
+                    case 3:
+                        //Add nested Object properties
+                        if (line.Contains("End of instance"))
+                        {
+                            //Continue with top level members
+                            state = 1;
+                        }
+                        else
+                        {
+                            //Create to level member
+                            Type t = no.GetType();
+
+                            var index = line.IndexOf('=');
+                            var name = line.Substring(0, index);
+
+                            var pi = t.GetProperty(name);
+
+                            if (null != pi)
+                            {
+                                if (pi.PropertyType.Name == "String")
+                                {
+                                    var value = line.Substring(index + 2, line.Length - index - 3);
+                                    pi.SetValue(no, value);
+                                }
+                                else if (pi.PropertyType.Name == "Int32")
+                                {
+                                    var value = line.Substring(index + 1, line.Length - index - 1);
+                                    pi.SetValue(no, Int32.Parse(value));
+                                }
+                                else if (pi.PropertyType.Name == "Double")
+                                {
+                                    var value = line.Substring(index + 1, line.Length - index - 1);
+                                    pi.SetValue(no, Double.Parse(value, CultureInfo.InvariantCulture));
+                                }
+
+                            }
+
+                        }
+                        break;
+                    default:
+                        break;
+
                 }
             }
-            
-            //stream.ReadLine();
-            //Regex regex = new Regex("\"(.*)\"");
-            //var v = regex.Match(stream.ReadLine());
-            //String cName = (v.Groups[1].ToString());
-            //Console.WriteLine(cName);
-            //var v2 = regex.Match(stream.ReadLine());
-            //String cCountry = (v2.Groups[1].ToString());
-            //Console.WriteLine(cCountry);
-            //var v3 = stream.ReadLine();
-            //int population = Convert.ToInt32(v3.Substring(v3.LastIndexOf('=') + 1));
-            //Console.WriteLine(population);
-            //stream.ReadLine();
-            //stream.ReadLine();
-            //stream.ReadLine();
-            //var v4 = stream.ReadLine();
-            //double longitude = Convert.ToDouble(v4.Substring(v4.LastIndexOf('=') + 1));
-            //Console.WriteLine(longitude);
-            //var v5 = stream.ReadLine();
-            //double latitude = Convert.ToDouble(v5.Substring(v5.LastIndexOf('=') + 1));
-            //Console.WriteLine(latitude);
-            //stream.ReadLine();
-            //stream.ReadLine();
-            //City c = new City(cName, cCountry, population, latitude, longitude);
-            //return c;
+
+
+            /*
+             * State Machine
+             * Create Top Level
+             * Create Top Level Attribute
+             * Create Sub Level
+             * Create Sub Level Attribute
+             * */
+
+            return retVal;
+        }
+
+        private object CreatObject(string line)
+        {
+            Assembly ass = Assembly.Load("RoutePlannerLib");
+            object o = ass.CreateInstance(line);
             return o;
         }
     }
