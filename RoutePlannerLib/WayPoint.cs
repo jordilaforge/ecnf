@@ -18,6 +18,8 @@ namespace Fhnw.Ecnf.RoutePlanner.RoutePlannerLib
             this.Longitude = longitude;
         }
 
+        public WayPoint() { }
+
         public override String ToString()
         {
             if (this.Name == null || this.Name.Equals(""))

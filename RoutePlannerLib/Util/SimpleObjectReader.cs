@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -24,25 +25,25 @@ namespace Fhnw.Ecnf.RoutePlanner.RoutePlannerLib.Util
             {
                 if (line.Contains("Instance of"))
                 {
-                    string[] splits = line.Split(null);
-                    string[] splits2 = splits[2].Split('.');
-                    string className = splits2[splits2.Length - 1];
-                    string namespaceName = null;
-                    for (int i = 0; i < splits2.Length - 1; ++i)
-                    {
-                        namespaceName += splits2[i];
-                        if (i != (splits2.Length - 2))
-                        {
-                            namespaceName += ".";
-                        }
-                    }
-                    Console.WriteLine(className);
-                    Console.WriteLine(namespaceName);
-                    o = Activator.CreateInstance(namespaceName, className);
+                    line = line.Remove(0, "Instance of ".Length);
+                    Assembly ass = Assembly.Load("RoutePlannerLib");
+                    o = ass.CreateInstance(line);
                 }
-                else if (line.Contains("="))
+                else if (line.Contains("=\""))
                 {
-                    
+                    Regex regex = new Regex("\"(.*)\"");
+                    var v = regex.Match(line);
+                    String cName = (v.Groups[1].ToString());
+                    var t = o.GetType();
+                    var prop = t.GetProperty("Name");
+                    prop.SetValue(o, cName);
+                }
+                else if (line.Contains("=")&&!(line.Contains("\""))&&!(line.Contains(".")))
+                {
+                    int integer = Convert.ToInt32(line.Substring(line.LastIndexOf('=') + 1));
+                    var t = o.GetType();
+                    var prop = t.GetProperty("Population");
+                    prop.SetValue(o, integer);
                 }
             }
             
