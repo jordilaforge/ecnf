@@ -25,6 +25,7 @@ namespace Fhnw.Ecnf.RoutePlanner.RoutePlannerLib.Util
             string noName = String.Empty;
             Object no = null;
             string line;
+            Assembly ass = Assembly.Load("RoutePlannerLib");
             while ((line = stream.ReadLine()) != null)
             {
                 switch (state)
@@ -33,7 +34,8 @@ namespace Fhnw.Ecnf.RoutePlanner.RoutePlannerLib.Util
                         if (line.Contains("Instance of "))
                         {
                             line = line.Remove(0, "Instance of ".Length);
-                            retVal = CreatObject(line);
+                            
+                            retVal = ass.CreateInstance(line);
                             state = 1;
                         }
                         break;
@@ -88,7 +90,7 @@ namespace Fhnw.Ecnf.RoutePlanner.RoutePlannerLib.Util
                         if (line.Contains("Instance of "))
                         {
                             line = line.Remove(0, "Instance of ".Length);
-                            no = CreatObject(line);
+                            no = ass.CreateInstance(line);;
 
                             if (null != no)
                             {
@@ -162,11 +164,6 @@ namespace Fhnw.Ecnf.RoutePlanner.RoutePlannerLib.Util
             return retVal;
         }
 
-        private object CreatObject(string line)
-        {
-            Assembly ass = Assembly.Load("RoutePlannerLib");
-            object o = ass.CreateInstance(line);
-            return o;
-        }
+
     }
 }
