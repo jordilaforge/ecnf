@@ -87,11 +87,7 @@ namespace Fhnw.Ecnf.RoutePlanner.RoutePlannerLib
 
         public City FindCity(string cityName)
         {
-            var city = cities.Find(delegate(City c)
-            {
-                return String.Compare(c.Name, cityName, true) == 0;
-            });
-            return city;
+            return cities.Find(c => c.Name.Equals(cityName, StringComparison.InvariantCultureIgnoreCase));
         }
 
         /// <summary>
