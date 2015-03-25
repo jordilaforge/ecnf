@@ -61,15 +61,7 @@ namespace Fhnw.Ecnf.RoutePlanner.RoutePlannerLib
 
         public List<City> FindNeighbours(WayPoint location, double distance)
         {
-            List<City> neighbours = new List<City>();
-            for (int i = 0; i < cities.Count; ++i)
-            {
-                double distanceCities = location.Distance(cities[i].Location);
-                if(distanceCities<=distance){
-                    neighbours.Add(cities[i]);
-                }
-            }
-            return SortByDistance(neighbours,location);
+            return (cities.Where(c => location.Distance(c.Location) < distance).OrderBy(d => location.Distance(d.Location)).ToList());
         }
 
 
