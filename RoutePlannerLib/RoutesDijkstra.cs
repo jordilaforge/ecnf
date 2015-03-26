@@ -15,6 +15,16 @@ namespace Fhnw.Ecnf.RoutePlanner.RoutePlannerLib
        
         public event RouteRequestHandler RouteRequestEvent;
 
+        public City[] FindCities(TransportModes transportMode)
+        {
+            List<City> citiesT = new List<City>();
+            var routesT = routes.Where(r => r.TransportMode == transportMode);
+            citiesT.AddRange(routesT.Select(c => c.FromCity));
+            citiesT.AddRange(routesT.Select(c => c.ToCity));
+            return citiesT.Distinct().ToArray();
+
+        }
+
 
         public RoutesDijkstra(Cities cities)
             : base(cities)

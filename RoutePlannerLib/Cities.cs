@@ -28,9 +28,14 @@ namespace Fhnw.Ecnf.RoutePlanner.RoutePlannerLib
             {
                 using (TextReader reader = new StreamReader(filename))
                 {
+                    //cities.Add(from c in reader.GetSplittedLines('\t')
+                    //           select new City(c[0].Trim(),
+                    //               c[1].Trim(),
+                    //               int.Parse(c[2]),
+                    //               double.Parse(c[3], CultureInfo.InvariantCulture),
+                    //               double.Parse(c[4], CultureInfo.InvariantCulture)));
                     IEnumerable<string[]> citiesAsStrings = reader.GetSplittedLines('\t');
-
-                    foreach(string[] cs in citiesAsStrings)
+                    foreach (string[] cs in citiesAsStrings)
                     {
                         cities.Add(new City(cs[0].Trim(),
                             cs[1].Trim(), int.Parse(cs[2]),
