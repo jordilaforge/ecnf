@@ -35,20 +35,20 @@ namespace Fhnw.Ecnf.RoutePlanner.RoutePlannerTest
 
         }
 
-        //[TestMethod]
-        //public void TestDynamicWorld()
-        //{
-        //     var cities = new Cities();
+        [TestMethod]
+        public void TestDynamicWorld()
+        {
+            var cities = new Cities();
 
-        //     cities.ReadCities("citiesTestDataLab2.txt");
+            cities.ReadCities("citiesTestDataLab2.txt");
 
-        //     dynamic world = new World(cities);
+            dynamic world = new World(cities);
 
-        //     dynamic karachi = world.Karachi();
-        //     Assert.AreEqual("Karachi", karachi.Name);
+            dynamic karachi = world.Karachi();
+            Assert.AreEqual("Karachi", karachi.Name);
 
-        //     string notFound = world.Entenhausen();
-        //     Assert.AreEqual("The city \"Entenhausen\" does not exist!", notFound);
-        //}
+            string notFound = world.Entenhausen();
+            Assert.AreEqual("The city \"Entenhausen\" does not exist!", notFound);
+        }
     }
 }
