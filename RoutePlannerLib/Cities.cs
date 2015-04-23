@@ -51,19 +51,12 @@ namespace Fhnw.Ecnf.RoutePlanner.RoutePlannerLib
 
         private List<City> SortByDistance(List<City> neighbours,WayPoint location)
         {
-            List<City> neighboursSorted = neighbours;
-            neighboursSorted.Sort(delegate(City a, City b)
-            {
-                return (a.Location.Distance(location).CompareTo(b.Location.Distance(location)));
-
-            }
-            );
-            return neighboursSorted;
+            return neighbours.OrderBy(n => n.Location.Distance(location)).ToList();
         }
 
         public City FindCity(string cityName)
         {
-            return cities.Find(c => c.Name.Equals(cityName, StringComparison.InvariantCultureIgnoreCase));
+            return cities.SingleOrDefault(c => c.Name.Equals(cityName,StringComparison.InvariantCultureIgnoreCase));      
         }
 
         /// <summary>
