@@ -28,10 +28,7 @@ namespace Fhnw.Ecnf.RoutePlanner.RoutePlannerLib
                 using (TextReader reader = new StreamReader(filename))
                 {
                     var citiesAsStrings = reader.GetSplittedLines('\t').ToList();
-
-                    citiesAsStrings.ForEach(cs =>cities.Add(new City(cs[0].Trim(),
-                          cs[1].Trim(), int.Parse(cs[2]),
-                            double.Parse(cs[3], CultureInfo.InvariantCulture), double.Parse(cs[4], CultureInfo.InvariantCulture))));
+                    cities.AddRange(citiesAsStrings.Select(c => new City(c[0].Trim(),c[1].Trim(),int.Parse(c[2]),double.Parse(c[3], CultureInfo.InvariantCulture), double.Parse(c[4], CultureInfo.InvariantCulture))));
                 }
             }
             catch (Exception)
