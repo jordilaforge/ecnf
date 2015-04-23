@@ -12,18 +12,17 @@ namespace Fhnw.Ecnf.RoutePlanner.RoutePlannerLib
     public class Cities
     {
         List<City> cities;
-        public int Count;
+        public int Count { get { return cities.Count; } }
 
         public Cities()
         {
             cities = new List<City>();
-            Count = 0;
         }
 
 
         public int ReadCities(string filename)
         {
-            cities = new List<City>();
+            int countOld = cities.Count;
             try
             {
                 using (TextReader reader = new StreamReader(filename))
@@ -39,21 +38,12 @@ namespace Fhnw.Ecnf.RoutePlanner.RoutePlannerLib
             {
                 throw;
             }
-            Count += cities.Count;
-            return cities.Count;
+            return cities.Count-countOld;
         }
 
         public City this[int index] //indexer implementation
         {
-            get 
-            {
-                if (index > Count)
-                {
-                    return null;
-                }
-                return this.cities[index]; 
-            }
-            set { this.cities[index] = value; }
+            get { return (index < cities.Count) ? cities[index] : null; }
         }
 
         public List<City> FindNeighbours(WayPoint location, double distance)
