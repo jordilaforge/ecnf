@@ -17,12 +17,10 @@ namespace Fhnw.Ecnf.RoutePlanner.RoutePlannerLib
 
         public City[] FindCities(TransportModes transportMode)
         {
-            List<City> citiesT = new List<City>();
-            var routesT = routes.Where(r => r.TransportMode == transportMode);
-            citiesT.AddRange(routesT.Select(c => c.FromCity));
-            citiesT.AddRange(routesT.Select(c => c.ToCity));
-            return citiesT.Distinct().ToArray();
-
+            return routes.Where(r => r.TransportMode == transportMode)
+                .Select(c => c.FromCity).Distinct()
+                .Union(routes.Where(r => r.TransportMode == transportMode).Select(c => c.ToCity).Distinct())
+                .ToArray();
         }
 
 
