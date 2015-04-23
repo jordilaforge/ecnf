@@ -25,7 +25,7 @@ namespace Fhnw.Ecnf.RoutePlanner.RoutePlannerLib.Util
             string noName = String.Empty;
             Object no = null;
             string line;
-            Assembly ass = Assembly.Load("RoutePlannerLib");
+            Assembly ass = Assembly.GetExecutingAssembly();
             while ((line = stream.ReadLine()) != null)
             {
                 switch (state)
