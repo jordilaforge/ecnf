@@ -19,8 +19,12 @@ namespace Fhnw.Ecnf.RoutePlanner.RoutePlannerConsole
             var City = new City("Bern", "Schweiz", 75000, 47.479319847061966, 8.212966918945312);
             Console.WriteLine(wayPoint);
             Console.WriteLine("Distance Bern to Tripolis: "+bern.Distance(tripolis)+"km");
-            Cities bla = new Cities();
-            Console.WriteLine(bla.ReadCities(@"..\..\..\RoutePlannerTest\data\citiesTestDataLab2.txt"));
+            Cities cities = new Cities();
+            cities.ReadCities(@"..\..\..\RoutePlannerTest\data\citiesTestDataLab2.txt");
+            RoutesDijkstra routes = new RoutesDijkstra(cities);
+            routes.ReadRoutes(@"..\..\..\RoutePlannerTest\data\linksTestDataLab3.txt");
+            Cities citiesFail = new Cities();
+            citiesFail.ReadCities(@"irgendeinfile.txt");
             Console.WriteLine("Press any key to quit");
             Console.ReadKey();
         }

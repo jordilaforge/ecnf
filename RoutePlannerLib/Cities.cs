@@ -6,11 +6,14 @@ using System.Text;
 using System.Threading.Tasks;
 using Fhnw.Ecnf.RoutePlanner.RoutePlannerLib.Util;
 using System.Globalization;
+using System.Diagnostics;
 
 namespace Fhnw.Ecnf.RoutePlanner.RoutePlannerLib
 {
     public class Cities
     {
+
+        private static readonly TraceSource logger = new TraceSource("Cities");
         List<City> cities;
         public int Count { get { return cities.Count; } }
 
@@ -22,6 +25,7 @@ namespace Fhnw.Ecnf.RoutePlanner.RoutePlannerLib
 
         public int ReadCities(string filename)
         {
+            logger.TraceEvent(TraceEventType.Information, 1, "ReadCities started");
             int countOld = cities.Count;
             try
             {
@@ -31,10 +35,11 @@ namespace Fhnw.Ecnf.RoutePlanner.RoutePlannerLib
                     cities.AddRange(citiesAsStrings.Select(c => new City(c[0].Trim(),c[1].Trim(),int.Parse(c[2]),double.Parse(c[3], CultureInfo.InvariantCulture), double.Parse(c[4], CultureInfo.InvariantCulture))));
                 }
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                throw;
+                logger.TraceEvent(TraceEventType.Critical, 1, e.StackTrace);
             }
+            logger.TraceEvent(TraceEventType.Information, 1, "ReadCities ended");
             return cities.Count-countOld;
         }
 
