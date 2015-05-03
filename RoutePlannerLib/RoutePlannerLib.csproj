@@ -52,6 +52,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings1.settings</DependentUpon>
     </Compile>
+    <Compile Include="RoutesFloydWarshall.cs" />
     <Compile Include="Util\SimpleObjectReader.cs" />
     <Compile Include="Util\SimpleObjectWriter.cs" />
     <Compile Include="Util\TextReaderExtension.cs" />

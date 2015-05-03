@@ -71,7 +71,19 @@ namespace Fhnw.Ecnf.RoutePlanner.RoutePlannerLib
 
         public abstract List<Link> FindShortestRouteBetween(string fromCity, string toCity, TransportModes mode);
 
-
+        //Neu Protected
+        /// <summary>
+        /// Find all cities between two cities
+        /// </summary>
+        /// <param name="fromCity">Start city as string</param>
+        /// <param name="toCity">End city as string</param>
+        /// <returns></returns>
+        protected List<City> FindCitiesBetween(string fromCity, string toCity)
+        {
+            var fc = cities.FindCity(fromCity);
+            var tc = cities.FindCity(toCity);
+            return cities.FindCitiesBetween(fc, tc);
+        }
 
 
     }
