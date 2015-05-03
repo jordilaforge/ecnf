@@ -35,8 +35,14 @@ namespace Fhnw.Ecnf.RoutePlanner.RoutePlannerLib
 			var stopWatch = new Stopwatch();
 			stopWatch.Start();
 			long ts0=stopWatch.ElapsedMilliseconds;
-
-            Setup(cities, links);
+            if (this.ExecuteParallel==true)
+            {
+                SetupParallel(cities, links);
+            }
+            else
+            {
+                Setup(cities, links);
+            }
 
             City source = FindCity( fromCity, cities );
             City target = FindCity(toCity, cities);
@@ -58,6 +64,42 @@ namespace Fhnw.Ecnf.RoutePlanner.RoutePlannerLib
                                 D[path.ElementAt(path.Count - 1).Index, target.Index]) );
             return route;
 
+        }
+
+        private void SetupParallel(List<City> cities, List<Link> links)
+        {
+            D = InitializeWeightParallel(cities, links);
+            P = new City[cities.Count, cities.Count];
+
+            Parallel.For(0, cities.Count, (k) =>{
+                for (var i = 0; i < cities.Count; i++)
+                    for (var j = 0; j < cities.Count; j++)
+                        if (D[i, k] != Double.MaxValue
+                         && D[k, j] != Double.MaxValue
+                         && D[i, k] + D[k, j] < D[i, j])
+                        {
+                            D[i, j] = D[i, k] + D[k, j];
+                            P[i, j] = cities[k];
+                        }
+            });
+        }
+
+        private double[,] InitializeWeightParallel(List<City> cities, List<Link> links)
+        {
+            var weight = new double[cities.Count, cities.Count];
+            Parallel.For(0, cities.Count, i =>
+            {
+                Parallel.For(0, cities.Count, j =>
+                {
+                    weight[i, j] = Double.MaxValue;
+                });
+            });
+            Parallel.ForEach(links, e =>
+            {
+                weight[e.FromCity.Index, e.ToCity.Index] = e.Distance;
+                weight[e.ToCity.Index, e.FromCity.Index] = e.Distance;
+            });
+            return weight;
         }
 
 

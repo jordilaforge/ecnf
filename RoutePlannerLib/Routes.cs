@@ -19,6 +19,7 @@ namespace Fhnw.Ecnf.RoutePlanner.RoutePlannerLib
         private static readonly TraceSource logger = new TraceSource("Routes");
         public List<Link> routes = new List<Link>();
         public Cities cities;
+        public bool ExecuteParallel { set; get; }
 
 
         public int Count

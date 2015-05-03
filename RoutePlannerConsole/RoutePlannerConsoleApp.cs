@@ -1,6 +1,7 @@
 ﻿using Fhnw.Ecnf.RoutePlanner.RoutePlannerLib;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -25,6 +26,48 @@ namespace Fhnw.Ecnf.RoutePlanner.RoutePlannerConsole
             routes.ReadRoutes(@"..\..\..\RoutePlannerTest\data\linksTestDataLab3.txt");
             Cities citiesFail = new Cities();
             citiesFail.ReadCities(@"irgendeinfile.txt");
+
+            Console.WriteLine("Starting parallel test......");
+            Cities citiesP = new Cities();
+            cities.ReadCities(@"..\..\..\RoutePlannerTest\data\citiesTestDataLab10.txt");
+
+
+            int warmUpRounds = 100;
+            int measureRounds = 20;
+            Routes routesP = new RoutesFloydWarshall(cities);
+            int count = routesP.ReadRoutes(@"..\..\..\RoutePlannerTest\data\linksTestDataLab10.txt");
+
+            Console.WriteLine("doing warmup");
+            for (int i = 0; i < warmUpRounds; i++)
+            {
+                List<Link> links = routesP.FindShortestRouteBetween("Lyon", "Berlin", TransportModes.Rail);
+            }
+            Stopwatch watch = new Stopwatch();
+            watch.Start();
+            Console.WriteLine("sequential mode: ");
+            // test short routes in parallel mode
+            routesP.ExecuteParallel = false;
+            for (int i = 0; i < measureRounds; i++)
+            {
+                List<Link> links = routesP.FindShortestRouteBetween("Lyon", "Berlin", TransportModes.Rail);
+            }
+            watch.Stop();
+            Console.WriteLine("Elapsed Time: " + watch.ElapsedMilliseconds + "ms");
+
+            watch.Reset();
+            watch.Start();
+            Console.WriteLine("parallel mode: ");
+            // test short routes in parallel mode
+            routesP.ExecuteParallel = true;
+            for (int i = 0; i < measureRounds; i++)
+            {
+                List<Link> links2 = routesP.FindShortestRouteBetween("Lyon", "Berlin", TransportModes.Rail);
+
+            }
+            watch.Stop();
+            Console.WriteLine("Elapsed Time: " + watch.ElapsedMilliseconds + "ms");
+            
+            
             Console.WriteLine("Press any key to quit");
             Console.ReadKey();
         }
