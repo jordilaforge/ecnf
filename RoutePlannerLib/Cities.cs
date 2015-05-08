@@ -6,54 +6,46 @@ using System.Text;
 using System.Threading.Tasks;
 using Fhnw.Ecnf.RoutePlanner.RoutePlannerLib.Util;
 using System.Globalization;
+using System.Diagnostics;
 
 namespace Fhnw.Ecnf.RoutePlanner.RoutePlannerLib
 {
     public class Cities
     {
+
+        private static readonly TraceSource logger = new TraceSource("Cities");
         List<City> cities;
-        public int Count;
+        public int Count { get { return cities.Count; } }
 
         public Cities()
         {
             cities = new List<City>();
-            Count = 0;
         }
 
 
         public int ReadCities(string filename)
         {
-            cities = new List<City>();
+            logger.TraceEvent(TraceEventType.Information, 1, "ReadCities started");
+            int countOld = cities.Count;
             try
             {
                 using (TextReader reader = new StreamReader(filename))
                 {
                     var citiesAsStrings = reader.GetSplittedLines('\t').ToList();
-
-                    citiesAsStrings.ForEach(cs =>cities.Add(new City(cs[0].Trim(),
-                          cs[1].Trim(), int.Parse(cs[2]),
-                            double.Parse(cs[3], CultureInfo.InvariantCulture), double.Parse(cs[4], CultureInfo.InvariantCulture))));
+                    cities.AddRange(citiesAsStrings.Select(c => new City(c[0].Trim(),c[1].Trim(),int.Parse(c[2]),double.Parse(c[3], CultureInfo.InvariantCulture), double.Parse(c[4], CultureInfo.InvariantCulture))));
                 }
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                throw;
+                logger.TraceEvent(TraceEventType.Critical, 1, e.StackTrace);
             }
-            Count += cities.Count;
-            return cities.Count;
+            logger.TraceEvent(TraceEventType.Information, 1, "ReadCities ended");
+            return cities.Count-countOld;
         }
 
         public City this[int index] //indexer implementation
         {
-            get 
-            {
-                if (index > Count)
-                {
-                    return null;
-                }
-                return this.cities[index]; 
-            }
-            set { this.cities[index] = value; }
+            get { return (index < cities.Count) ? cities[index] : null; }
         }
 
         public List<City> FindNeighbours(WayPoint location, double distance)
@@ -64,19 +56,12 @@ namespace Fhnw.Ecnf.RoutePlanner.RoutePlannerLib
 
         private List<City> SortByDistance(List<City> neighbours,WayPoint location)
         {
-            List<City> neighboursSorted = neighbours;
-            neighboursSorted.Sort(delegate(City a, City b)
-            {
-                return (a.Location.Distance(location).CompareTo(b.Location.Distance(location)));
-
-            }
-            );
-            return neighboursSorted;
+            return neighbours.OrderBy(n => n.Location.Distance(location)).ToList();
         }
 
         public City FindCity(string cityName)
         {
-            return cities.Find(c => c.Name.Equals(cityName, StringComparison.InvariantCultureIgnoreCase));
+            return cities.SingleOrDefault(c => c.Name.Equals(cityName,StringComparison.InvariantCultureIgnoreCase));      
         }
 
         /// <summary>
@@ -104,8 +89,19 @@ namespace Fhnw.Ecnf.RoutePlanner.RoutePlannerLib
                         && c.Location.Longitude > minLon && c.Location.Longitude < maxLon));
 
             foundCities.Add(to);
+            InitIndexForAlgorithm(foundCities);
             return foundCities;
         }
+
+
+        private List<City> InitIndexForAlgorithm(List<City> foundCities)
+        {
+            // set index for FloydWarshall 
+            for (var index = 0; index < foundCities.Count; index++)
+                foundCities[index].Index = index;
+
+            return foundCities;
+        } 
 
     }
 }

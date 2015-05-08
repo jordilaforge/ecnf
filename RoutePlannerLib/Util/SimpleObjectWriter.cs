@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 
 namespace Fhnw.Ecnf.RoutePlanner.RoutePlannerLib.Util
 {
@@ -25,6 +26,10 @@ namespace Fhnw.Ecnf.RoutePlanner.RoutePlannerLib.Util
 
             foreach (var prop in o.GetType().GetProperties())
             {
+                if (prop.GetCustomAttributes(false).Any(a => a is XmlIgnoreAttribute))
+                {
+                    break;
+                }
                 if (prop.PropertyType == typeof(string))
                 {
                     stream.WriteLine(prop.Name+"=\""+prop.GetValue(o,null)+"\"");

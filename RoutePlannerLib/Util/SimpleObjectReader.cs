@@ -25,7 +25,7 @@ namespace Fhnw.Ecnf.RoutePlanner.RoutePlannerLib.Util
             string noName = String.Empty;
             Object no = null;
             string line;
-            Assembly ass = Assembly.Load("RoutePlannerLib");
+            Assembly ass = Assembly.GetExecutingAssembly();
             while ((line = stream.ReadLine()) != null)
             {
                 switch (state)
@@ -64,17 +64,17 @@ namespace Fhnw.Ecnf.RoutePlanner.RoutePlannerLib.Util
 
                             if (null != pi)
                             {
-                                if (pi.PropertyType.Name == "String")
+                                if (pi.PropertyType == typeof(string))
                                 {
                                     var value = line.Substring(index + 2, line.Length - index - 3);
                                     pi.SetValue(retVal, value);
                                 }
-                                else if (pi.PropertyType.Name == "Int32")
+                                else if (pi.PropertyType == typeof(int))
                                 {
                                     var value = line.Substring(index + 1, line.Length - index - 1);
                                     pi.SetValue(retVal, Int32.Parse(value));
                                 }
-                                else if (pi.PropertyType.Name == "Double")
+                                else if (pi.PropertyType == typeof(double))
                                 {
                                     var value = line.Substring(index + 1, line.Length - index - 1);
                                     pi.SetValue(retVal, Double.Parse(value, CultureInfo.InvariantCulture));
@@ -126,17 +126,17 @@ namespace Fhnw.Ecnf.RoutePlanner.RoutePlannerLib.Util
 
                             if (null != pi)
                             {
-                                if (pi.PropertyType.Name == "String")
+                                if (pi.PropertyType == typeof(string))
                                 {
                                     var value = line.Substring(index + 2, line.Length - index - 3);
                                     pi.SetValue(no, value);
                                 }
-                                else if (pi.PropertyType.Name == "Int32")
+                                else if (pi.PropertyType == typeof(int))
                                 {
                                     var value = line.Substring(index + 1, line.Length - index - 1);
                                     pi.SetValue(no, Int32.Parse(value));
                                 }
-                                else if (pi.PropertyType.Name == "Double")
+                                else if (pi.PropertyType == typeof(double))
                                 {
                                     var value = line.Substring(index + 1, line.Length - index - 1);
                                     pi.SetValue(no, Double.Parse(value, CultureInfo.InvariantCulture));

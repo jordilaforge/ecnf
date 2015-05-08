@@ -6,6 +6,7 @@ using System.Threading;
 using System.Linq;
 using Fhnw.Ecnf.RoutePlanner.RoutePlannerLib.Util;
 using Fhnw.Ecnf.RoutePlanner.RoutePlannerLib;
+using System.Diagnostics;
 
 
 namespace Fhnw.Ecnf.RoutePlanner.RoutePlannerLib
@@ -15,8 +16,10 @@ namespace Fhnw.Ecnf.RoutePlanner.RoutePlannerLib
     /// </summary>
     public abstract class Routes : IRoutes
     {
+        private static readonly TraceSource logger = new TraceSource("Routes");
         public List<Link> routes = new List<Link>();
         public Cities cities;
+        public bool ExecuteParallel { set; get; }
 
 
         public int Count
@@ -43,6 +46,7 @@ namespace Fhnw.Ecnf.RoutePlanner.RoutePlannerLib
         {
             using (TextReader reader = new StreamReader(filename))
             {
+                logger.TraceEvent(TraceEventType.Information, 1, "ReadRoutes started");
                 IEnumerable<string[]> routesAsStrings = reader.GetSplittedLines('\t');
 
                 foreach (string[] route in routesAsStrings)
@@ -56,8 +60,9 @@ namespace Fhnw.Ecnf.RoutePlanner.RoutePlannerLib
                                                    TransportModes.Rail));
                     }
                 }
-                
-            }
+
+            } 
+            logger.TraceEvent(TraceEventType.Information, 1, "ReadRoutes ended");
             return Count;
 
         }
@@ -67,7 +72,19 @@ namespace Fhnw.Ecnf.RoutePlanner.RoutePlannerLib
 
         public abstract List<Link> FindShortestRouteBetween(string fromCity, string toCity, TransportModes mode);
 
-
+        //Neu Protected
+        /// <summary>
+        /// Find all cities between two cities
+        /// </summary>
+        /// <param name="fromCity">Start city as string</param>
+        /// <param name="toCity">End city as string</param>
+        /// <returns></returns>
+        protected List<City> FindCitiesBetween(string fromCity, string toCity)
+        {
+            var fc = cities.FindCity(fromCity);
+            var tc = cities.FindCity(toCity);
+            return cities.FindCitiesBetween(fc, tc);
+        }
 
 
     }

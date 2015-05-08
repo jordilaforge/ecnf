@@ -4,9 +4,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 
 namespace Fhnw.Ecnf.RoutePlanner.RoutePlannerLib
 {
+    [Serializable]
     public class City
     {
         public String Name { get; set; }
@@ -14,6 +16,8 @@ namespace Fhnw.Ecnf.RoutePlanner.RoutePlannerLib
         public int Population { get; set; }
         public WayPoint Location { get; set; }
 
+        [XmlIgnore]
+        public int Index { get; set; } 
 
         public City() { }
 
@@ -23,6 +27,21 @@ namespace Fhnw.Ecnf.RoutePlanner.RoutePlannerLib
             this.Country = country;
             this.Population = population;
             this.Location = new WayPoint(name, latitude, longitude);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj != null && obj.GetType() == this.GetType())
+            {
+                return (this.Name.Equals(((City)obj).Name)) &&
+                    this.Country.Equals(((City)obj).Country);
+            }
+            return false;
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
         }
     }
 }
