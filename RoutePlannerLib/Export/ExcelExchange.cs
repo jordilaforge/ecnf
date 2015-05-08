@@ -22,10 +22,9 @@ namespace Fhnw.Ecnf.RoutePlanner.RoutePlannerLib.Export
 
             Microsoft.Office.Interop.Excel.Workbook xlWorkBook;
             Microsoft.Office.Interop.Excel.Worksheet xlWorkSheet;
-            object misValue = System.Reflection.Missing.Value;
             
             //Titel
-            xlWorkBook = xlApp.Workbooks.Add(misValue);
+            xlWorkBook = xlApp.Workbooks.Add();
             xlWorkSheet = (Microsoft.Office.Interop.Excel.Worksheet)xlWorkBook.Worksheets.get_Item(1);
             xlWorkSheet.Cells[1, 1] = "From";
             xlWorkSheet.Cells[1, 2] = "To";
@@ -53,10 +52,11 @@ namespace Fhnw.Ecnf.RoutePlanner.RoutePlannerLib.Export
             formatRange.Font.Size = 14;
             //auto fit cells
             formatRange.EntireColumn.AutoFit();
+            
             xlApp.DisplayAlerts = false;
-            xlWorkBook.SaveAs(fileName, Microsoft.Office.Interop.Excel.XlFileFormat.xlWorkbookNormal, misValue, misValue, misValue, misValue, Microsoft.Office.Interop.Excel.XlSaveAsAccessMode.xlExclusive, misValue, misValue, misValue, misValue, misValue);
+            xlWorkBook.SaveAs(fileName, Microsoft.Office.Interop.Excel.XlFileFormat.xlWorkbookNormal, Microsoft.Office.Interop.Excel.XlSaveAsAccessMode.xlExclusive);
             xlApp.DisplayAlerts = true;
-            xlWorkBook.Close(true, misValue, misValue);
+            xlWorkBook.Close(true);
             xlApp.Quit();
 
             releaseObject(xlWorkSheet);
