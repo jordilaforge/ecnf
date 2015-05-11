@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -22,7 +23,7 @@ namespace Fhnw.Ecnf.RoutePlanner.RoutePlannerLib.Util
         public void Next(object o)
         {
 
-            stream.WriteLine("Instance of "+o.GetType().FullName);
+            stream.WriteLine("Instance of " + o.GetType().FullName, CultureInfo.InvariantCulture);
 
             foreach (var prop in o.GetType().GetProperties())
             {
@@ -32,23 +33,23 @@ namespace Fhnw.Ecnf.RoutePlanner.RoutePlannerLib.Util
                 }
                 if (prop.PropertyType == typeof(string))
                 {
-                    stream.WriteLine(prop.Name+"=\""+prop.GetValue(o,null)+"\"");
+                    stream.WriteLine(prop.Name + "=\"" + prop.GetValue(o, null) + "\"", CultureInfo.InvariantCulture);
                 }
                 else if (prop.PropertyType == typeof(int))
                 {
-                    stream.WriteLine(prop.Name +"="+ prop.GetValue(o,null));
+                    stream.WriteLine(prop.Name + "=" + prop.GetValue(o, null), CultureInfo.InvariantCulture);
                 }
                 else if (prop.PropertyType == typeof(double))
                 {
-                    stream.WriteLine(prop.Name + "=" + prop.GetValue(o,null));
+                    stream.WriteLine(prop.Name + "=" + prop.GetValue(o, null), CultureInfo.InvariantCulture);
                 }
                 else
                 {
-                    stream.WriteLine("Location is a nested object...");
+                    stream.WriteLine("Location is a nested object...", CultureInfo.InvariantCulture);
                     Next(prop.GetValue(o, null));
                 }
             }
-            stream.WriteLine("End of instance");
+            stream.WriteLine("End of instance", CultureInfo.InvariantCulture);
             Console.WriteLine(stream);
         }
     }
