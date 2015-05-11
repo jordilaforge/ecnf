@@ -52,34 +52,14 @@ namespace Fhnw.Ecnf.RoutePlanner.RoutePlannerLib.Export
             formatRange.Font.Size = 14;
             //auto fit cells
             formatRange.EntireColumn.AutoFit();
-            
+
+            bool temp = xlApp.DisplayAlerts;
             xlApp.DisplayAlerts = false;
             xlWorkBook.SaveAs(fileName, Microsoft.Office.Interop.Excel.XlFileFormat.xlWorkbookNormal, Microsoft.Office.Interop.Excel.XlSaveAsAccessMode.xlExclusive);
-            xlApp.DisplayAlerts = true;
+            xlApp.DisplayAlerts = temp;
             xlWorkBook.Close(true);
             xlApp.Quit();
-
-            releaseObject(xlWorkSheet);
-            releaseObject(xlWorkBook);
-            releaseObject(xlApp);
         }
 
-        private void releaseObject(object obj)
-        {
-            try
-            {
-                System.Runtime.InteropServices.Marshal.ReleaseComObject(obj);
-                obj = null;
-            }
-            catch (Exception ex)
-            {
-                obj = null;
-                Console.WriteLine("Exception Occured while releasing object " + ex.ToString());
-            }
-            finally
-            {
-                GC.Collect();
-            }
-        }
     }
 }
