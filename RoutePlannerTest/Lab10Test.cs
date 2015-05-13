@@ -99,7 +99,7 @@ namespace Fhnw.Ecnf.RoutePlanner.RoutePlannerTest
             Assert.IsNotNull(links);
             Assert.AreEqual(13, links.Count);
 
-            // test short routes in parallel mode
+            // test short routes in non parallel mode
             routes.ExecuteParallel = false;
             List<Link> links2 = routes.FindShortestRouteBetween("Lyon", "Berlin", TransportModes.Rail);
             Assert.IsNotNull(links2);

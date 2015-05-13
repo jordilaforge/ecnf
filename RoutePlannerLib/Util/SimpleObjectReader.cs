@@ -72,7 +72,7 @@ namespace Fhnw.Ecnf.RoutePlanner.RoutePlannerLib.Util
                                 else if (pi.PropertyType == typeof(int))
                                 {
                                     var value = line.Substring(index + 1, line.Length - index - 1);
-                                    pi.SetValue(retVal, Int32.Parse(value));
+                                    pi.SetValue(retVal, Int32.Parse(value, CultureInfo.InvariantCulture));
                                 }
                                 else if (pi.PropertyType == typeof(double))
                                 {
@@ -134,7 +134,7 @@ namespace Fhnw.Ecnf.RoutePlanner.RoutePlannerLib.Util
                                 else if (pi.PropertyType == typeof(int))
                                 {
                                     var value = line.Substring(index + 1, line.Length - index - 1);
-                                    pi.SetValue(no, Int32.Parse(value));
+                                    pi.SetValue(no, Int32.Parse(value, CultureInfo.InvariantCulture));
                                 }
                                 else if (pi.PropertyType == typeof(double))
                                 {
