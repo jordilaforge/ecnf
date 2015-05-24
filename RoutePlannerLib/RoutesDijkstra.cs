@@ -209,5 +209,42 @@ namespace Fhnw.Ecnf.RoutePlanner.RoutePlannerLib
             citiesOnRoute.Reverse();
             return citiesOnRoute;
         }
+
+
+        public async Task<List<Link>> FindShortestRouteBetweenAsync(string fromCity, string toCity, TransportModes mode, IProgress<string> progress)
+        {
+            if (progress != null) progress.Report("Started FindShortesRouteBetweenAsync done");
+            OnRaiseRouteRequestEvent(new RouteRequestEventArgs(fromCity, toCity, mode));
+            City fromCityObi = cities.FindCity(fromCity);
+            City toCityObi = cities.FindCity(toCity);
+            var citiesBetween = cities.FindCitiesBetween(fromCityObi, toCityObi);
+            if (citiesBetween == null || citiesBetween.Count < 1 || routes == null || routes.Count < 1)
+                return null;
+            if (progress != null) progress.Report("FindCitiesBetween done");
+
+            var source = citiesBetween[0];
+            var target = citiesBetween[citiesBetween.Count - 1];
+
+            Dictionary<City, double> dist;
+            Dictionary<City, City> previous;
+            var q = FillListOfNodes(citiesBetween, out dist, out previous);
+            dist[source] = 0.0;
+            if (progress != null) progress.Report("FillListofNodes done");
+            // the actual algorithm
+            previous = SearchShortestPath(mode, q, dist, previous);
+            if (progress != null) progress.Report("SearchShortestPath done");
+            // create a list with all cities on the route
+            var citiesOnRoute = GetCitiesOnRoute(source, target, previous);
+            // creating new Task with Factory to wait for
+            var task = Task.Factory.StartNew(() => FindPath(citiesOnRoute, mode));
+            // prepare final list if links
+            if (progress != null) progress.Report("FindPath done");
+            return await task;
+        }
+        
+        public Task<List<Link>> FindShortestRouteBetweenAsync(string fromCity, string toCity, TransportModes mode)
+        {
+            return FindShortestRouteBetweenAsync(fromCity, toCity, mode, null);
+        }
     }
 }
