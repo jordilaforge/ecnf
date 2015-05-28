@@ -89,7 +89,6 @@ namespace Fhnw.Ecnf.RoutePlanner.RoutePlannerTest
 
             Routes routes = new RoutesFloydWarshall(cities);
             int count = routes.ReadRoutes(@"linksTestDataLab10.txt");
-            //edited to 118 because there are realy 118 elements in list
             Assert.AreEqual(118, count);
 
 
@@ -99,7 +98,7 @@ namespace Fhnw.Ecnf.RoutePlanner.RoutePlannerTest
             Assert.IsNotNull(links);
             Assert.AreEqual(13, links.Count);
 
-            // test short routes in non parallel mode
+            // test short routes in parallel mode
             routes.ExecuteParallel = false;
             List<Link> links2 = routes.FindShortestRouteBetween("Lyon", "Berlin", TransportModes.Rail);
             Assert.IsNotNull(links2);
@@ -107,38 +106,38 @@ namespace Fhnw.Ecnf.RoutePlanner.RoutePlannerTest
 
         }
 
-    //    [TestMethod]
-    //    public void TestTask3CompareAlgorithms()
-    //    {
-    //        //IGNORE THIS TEST - ITS UNRELIABLE
-    //        /*
-    //        Cities cities = new Cities();
+        [TestMethod]
+        public void TestTask3CompareAlgorithms()
+        {
+			//IGNORE THIS TEST - ITS UNRELIABLE
+			/*
+            Cities cities = new Cities();
 
-    //        cities.ReadCities(@"citiesTestDataLab10.txt");
-    //        Assert.AreEqual(6372, cities.Count);
+            cities.ReadCities(@"citiesTestDataLab10.txt");
+            Assert.AreEqual(6372, cities.Count);
 
-    //        Routes routes = new RoutesDijkstra(cities);
-    //        long dijkstraTime = this.FindRoutes(routes);
+            Routes routes = new RoutesDijkstra(cities);
+            long dijkstraTime = this.FindRoutes(routes);
 
-    //        routes = new RoutesFloydWarshall(cities);
-    //        routes.ExecuteParallel = false;
-    //        long floydWarshallTime = this.FindRoutes(routes);
+            routes = new RoutesFloydWarshall(cities);
+            routes.ExecuteParallel = false;
+            long floydWarshallTime = this.FindRoutes(routes);
 
-    //        // the sequential version should be slower
-    //        Assert.IsTrue(floydWarshallTime > dijkstraTime, "FloydWarshal should be slower");
-    //        */
-    //    }
+            // the sequential version should be slower
+            Assert.IsTrue(floydWarshallTime > dijkstraTime, "FloydWarshal should be slower");
+			*/
+        }
 
-    //    private long FindRoutes(Routes routes)
-    //    {
-    //        routes.ReadRoutes(@"linksTestDataLab10.txt");
+        private long FindRoutes(Routes routes)
+        {
+            routes.ReadRoutes(@"linksTestDataLab10.txt");
 
-    //        // test available cities
-    //        Stopwatch timer = new Stopwatch();
+            // test available cities
+            Stopwatch timer = new Stopwatch();
 
-    //        timer.Start();
-    //        routes.FindShortestRouteBetween("Lyon", "Berlin", TransportModes.Rail);
-    //        return timer.ElapsedTicks;
-    //    }
+            timer.Start();
+            routes.FindShortestRouteBetween("Lyon", "Berlin", TransportModes.Rail);
+            return timer.ElapsedTicks;
+        }
     }
 }
