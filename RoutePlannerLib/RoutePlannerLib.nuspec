@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>RoutePlannerLib_PS</id>
+    <version>1.0.0.0</version>
+    <title>RoutePlannerLib</title>
+    <authors>Philipp Steiner</authors>
+    <owners>Philipp Steiner</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>This is a project from the course ecnf at University of FHNW Please do not download</description>
+    <copyright>Copyright 2015</copyright>
+  </metadata>
+</package>

@@ -6,9 +6,9 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("RoutePlannerLib")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("This is a test project for the course ecnf at FHNW")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("Philipp Steiner")]
 [assembly: AssemblyProduct("RoutePlannerLib")]
 [assembly: AssemblyCopyright("Copyright ©  2015")]
 [assembly: AssemblyTrademark("")]
