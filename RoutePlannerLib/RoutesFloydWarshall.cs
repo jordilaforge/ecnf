@@ -71,7 +71,7 @@ namespace Fhnw.Ecnf.RoutePlanner.RoutePlannerLib
             D = InitializeWeightParallel(cities, links);
             P = new City[cities.Count, cities.Count];
 
-            Parallel.For(0, cities.Count, (k) =>{
+            for (var k = 0; k < cities.Count; k++)
                 for (var i = 0; i < cities.Count; i++)
                     for (var j = 0; j < cities.Count; j++)
                         if (D[i, k] != Double.MaxValue
@@ -81,7 +81,6 @@ namespace Fhnw.Ecnf.RoutePlanner.RoutePlannerLib
                             D[i, j] = D[i, k] + D[k, j];
                             P[i, j] = cities[k];
                         }
-            });
         }
 
         private double[,] InitializeWeightParallel(List<City> cities, List<Link> links)
